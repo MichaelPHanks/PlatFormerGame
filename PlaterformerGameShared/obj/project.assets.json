@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlaterformerGameShared.csproj",
-      "projectName": "PlaterformerGameShared",
-      "projectPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlaterformerGameShared.csproj",
+      "projectUniqueName": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlatformerGameShared.csproj",
+      "projectName": "PlatformerGameShared",
+      "projectPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlatformerGameShared.csproj",
       "packagesPath": "C:\\Users\\mhank\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\obj\\",
       "projectStyle": "PackageReference",
