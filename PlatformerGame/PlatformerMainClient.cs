@@ -13,6 +13,7 @@ namespace PlatformerGame
         private GraphicsDeviceManager m_graphics;
         private SpriteBatch m_spriteBatch;
         private Dictionary<GameStateEnum, IGameState> m_gameStates;
+        private IGameState m_currentState;
 
         public PlatformerMainClient()
         {
@@ -26,21 +27,29 @@ namespace PlatformerGame
             // TODO: Add your initialization logic here
             m_gameStates = new Dictionary<GameStateEnum, IGameState>
             {
-                { GameStateEnum.MainMenu, new MainMenuView() }
+                { GameStateEnum.MainMenu, new MainMenuView() },
+                { GameStateEnum.GamePlay, new GamePlayView()}
             };
-
+            m_currentState = m_gameStates[GameStateEnum.MainMenu];
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
+            foreach (var item in m_gameStates)
+            {
+                item.Value.loadContent(this.Content);
+            }
 
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
+
+            GameStateEnum nextStateEnum = this.m_currentState.processInput(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
