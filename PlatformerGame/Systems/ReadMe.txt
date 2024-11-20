@@ -1,0 +1,1 @@
+This folder is used for 'Systems' types in previous games. This seems to deal with the keyboard system, network system, Renderer system, etc. Will look into using this.
