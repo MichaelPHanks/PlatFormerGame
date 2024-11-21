@@ -23,3 +23,10 @@ C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\obj\Debug\net6.0\refin
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\obj\Debug\net6.0\PlatformerGameClient.pdb
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\obj\Debug\net6.0\PlatformerGameClient.genruntimeconfig.cache
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\obj\Debug\net6.0\ref\PlatformerGameClient.dll
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\obj\Debug\net6.0\PlatformerGameClient.sourcelink.json
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.deps.json
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.runtimeconfig.json
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.exe
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.dll
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.pdb
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Fonts\menu.xnb

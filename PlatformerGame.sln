@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformerGameClient", "PlatformerGame\PlatformerGameClient.csproj", "{39CBDFD1-5133-42A0-A40F-EE1AAFC99B49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformerGameClient", "PlatformerGame\PlatformerGameClient.csproj", "{39CBDFD1-5133-42A0-A40F-EE1AAFC99B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatFormerGameServer", "PlatFormerGameServer\PlatFormerGameServer.csproj", "{86C9A1FF-76AD-433A-A6A2-EA4D58B91060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformerGameServer", "PlatFormerGameServer\PlatformerGameServer.csproj", "{86C9A1FF-76AD-433A-A6A2-EA4D58B91060}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaterformerGameShared", "PlaterformerGameShared\PlaterformerGameShared.csproj", "{9DCE4B03-3E65-4497-BD49-5FCEBFA337B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformerGameShared", "PlaterformerGameShared\PlatformerGameShared.csproj", "{9DCE4B03-3E65-4497-BD49-5FCEBFA337B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

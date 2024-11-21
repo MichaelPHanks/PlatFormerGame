@@ -54,6 +54,19 @@
             "rid": "win-x86"
           }
         }
+      },
+      "PlatformerGameShared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "MonoGame.Framework.DesktopGL": "3.8.1.303"
+        },
+        "compile": {
+          "bin/placeholder/PlatformerGameShared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PlatformerGameShared.dll": {}
+        }
       }
     }
   },
@@ -93,12 +106,18 @@
         "runtimes/win-x86/native/SDL2.dll",
         "runtimes/win-x86/native/soft_oal.dll"
       ]
+    },
+    "PlatformerGameShared/1.0.0": {
+      "type": "project",
+      "path": "../PlaterformerGameShared/PlatformerGameShared.csproj",
+      "msbuildProject": "../PlaterformerGameShared/PlatformerGameShared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
       "MonoGame.Content.Builder.Task >= 3.8.1.303",
-      "MonoGame.Framework.DesktopGL >= 3.8.1.303"
+      "MonoGame.Framework.DesktopGL >= 3.8.1.303",
+      "PlatformerGameShared >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -133,7 +152,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlatformerGameShared.csproj": {
+              "projectPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlaterformerGameShared\\PlatformerGameShared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

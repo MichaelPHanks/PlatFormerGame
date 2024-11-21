@@ -13,7 +13,6 @@ namespace PlatformerGameClient.Views
     {
         public override void loadContent(ContentManager contentManager)
         {
-            throw new NotImplementedException();
         }
 
         public override GameStateEnum processInput(GameTime gameTime)

@@ -31,6 +31,10 @@ namespace PlatformerGame
                 { GameStateEnum.GamePlay, new GamePlayView()}
             };
             m_currentState = m_gameStates[GameStateEnum.MainMenu];
+            foreach (var item in m_gameStates)
+            {
+                item.Value.initialize(this.GraphicsDevice, m_graphics);
+            }
             base.Initialize();
         }
 
@@ -63,6 +67,8 @@ namespace PlatformerGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            m_currentState.render(gameTime);
 
             base.Draw(gameTime);
         }
