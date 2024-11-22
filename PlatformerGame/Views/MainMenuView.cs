@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Enums;
 using PlatformerGameClient.Rendering;
 using System;
@@ -19,15 +20,15 @@ namespace PlatformerGameClient.Views
         private SpriteFont m_fontMenu;
         private SpriteFont m_fontMenuSelect;
         private SpriteFont m_fontTitle;
+        private Rectangle gameplay = new Rectangle();
         private Rectangle about = new Rectangle();
         private Rectangle quit = new Rectangle();
         private Rectangle help = new Rectangle();
         private Rectangle highScores = new Rectangle();
         private Rectangle settings = new Rectangle();
-        private Rectangle gameplay = new Rectangle();
 
-        private Dictionary<string, Rectangle> m_recs = new Dictionary<string, Rectangle>();
-
+        private Dictionary<MenuState, MenuItem> m_menuItems = new Dictionary<MenuState, MenuItem>();
+        
 
 
 
@@ -38,8 +39,7 @@ namespace PlatformerGameClient.Views
         public bool canUseMouse = false;
 
 
-        private RenderMenuItem renderNormal;
-        private RenderMenuItem renderSelected;
+    
 
 
         private enum MenuState
@@ -56,31 +56,206 @@ namespace PlatformerGameClient.Views
         private MenuState m_currentSelection = MenuState.NewGame;
         private MenuState m_prevSelection = MenuState.NewGame;
         private bool m_waitForKeyRelease = false;
+
+
+
         public override void loadContent(ContentManager contentManager)
         {
-            m_recs = new Dictionary<string, Rectangle>
-            { {"Join Game", this.gameplay },
-                { "High Scores", this.highScores},
-                { "Help", this.help},
-                { "About", this.about},
-                { "Quit", this.quit},
-                { "Settings", this.settings}
-            };
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
-
-
-            /*  renderNormal = new RenderMenuItem(m_fontMenuSelect, );
-              renderSelected = new RenderMenuItem();*/
-
+            m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-selected");
+            hover = contentManager.Load<SoundEffect>("Sounds/little_robot_sound_factory_multimedia_Click_Electronic_14");
+           /* mainBackground = contentManager.Load<Texture2D>("MainBackground");*/
+            m_fontTitle = contentManager.Load<SpriteFont>("Fonts/mainmenuTitle");
+            soundInstance = hover.CreateInstance();
         }
-
-        //throw new NotImplementedException();
-
-
         public override GameStateEnum processInput(GameTime gameTime)
         {
+
+            if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+            {
+                isEnterUp = true;
+            }
+
+
+            if (!m_waitForKeyRelease && isEnterUp)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                {
+                    if (m_currentSelection == MenuState.Quit)
+                    {
+                        m_currentSelection = MenuState.NewGame;
+                    }
+                    else
+                    {
+                        m_currentSelection++;
+                    }
+                    m_waitForKeyRelease = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                {
+                    if (m_currentSelection == MenuState.NewGame)
+                    {
+                        m_currentSelection = MenuState.Quit;
+                    }
+                    else
+                    {
+                        m_currentSelection--;
+                    }
+                    m_waitForKeyRelease = true;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
+                {
+                    canUseMouse = false;
+                    isEnterUp = false;
+                    return GameStateEnum.EnterName;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.HighScores)
+                {
+                    isEnterUp = false;
+                    canUseMouse = false;
+
+                    return GameStateEnum.HighScores;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
+                {
+                    isEnterUp = false;
+                    canUseMouse = false;
+
+                    return GameStateEnum.Help;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
+                {
+                    isEnterUp = false;
+                    canUseMouse = false;
+
+                    return GameStateEnum.About;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Quit)
+                {
+                    isEnterUp = false;
+                    canUseMouse = false;
+
+                    return GameStateEnum.Exit;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Settings)
+                {
+                    isEnterUp = false;
+                    canUseMouse = false;
+
+                    return GameStateEnum.Settings;
+                }
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
+            {
+                m_waitForKeyRelease = false;
+            }
+
+
+            if (canUseMouse)
+            {
+                if (gameplay.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.EnterName;
+                    }
+                    m_currentSelection = MenuState.NewGame;
+
+
+
+                }
+                else if (help.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.Help;
+                    }
+                    m_currentSelection = MenuState.Help;
+
+                }
+                else if (about.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.About;
+                    }
+                    m_currentSelection = MenuState.About;
+
+                }
+                else if (highScores.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.HighScores;
+                    }
+                    m_currentSelection = MenuState.HighScores;
+
+                }
+                else if (quit.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.Exit;
+                    }
+                    m_currentSelection = MenuState.Quit;
+
+                }
+
+                else if (settings.Contains(Mouse.GetState().Position))
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        canUseMouse = false;
+                        isEnterUp = false;
+
+                        return GameStateEnum.Settings;
+                    }
+                    m_currentSelection = MenuState.Settings;
+
+                }
+            }
+            /*else 
+            {
+                m_currentSelection = MenuState.None;
+            }*/
+
+            if (m_prevSelection != m_currentSelection && m_currentSelection != MenuState.None)
+            {
+                if (soundInstance.State == SoundState.Playing)
+                {
+                    soundInstance.Stop();
+
+                }
+                soundInstance.Play();
+
+            }
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                canUseMouse = false;
+            }
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+            {
+                canUseMouse = true;
+            }
+            m_prevSelection = m_currentSelection;
+
             return GameStateEnum.MainMenu;
-            
         }
 
         public override void render(GameTime gameTime)
@@ -88,19 +263,9 @@ namespace PlatformerGameClient.Views
             m_spriteBatch.Begin();
             // Rend the background
 
-            // m_spriteBatch.Draw(mainBackground, new Rectangle(0, 0, m_graphics.PreferredBackBufferWidth, m_graphics.PreferredBackBufferHeight), Color.White);
-            float bottom = m_graphics.PreferredBackBufferHeight / 4;
+           /* m_spriteBatch.Draw(mainBackground, new Rectangle(0, 0, m_graphics.PreferredBackBufferWidth, m_graphics.PreferredBackBufferHeight), Color.White);*/
 
-            foreach (string key in m_recs.Keys) 
-            {
-                bottom = renderMenuItem(m_fontMenu, key, bottom, Color.Black, m_spriteBatch, m_graphics);
-            }
-
-
-
-
-
-       /*     float bottom = drawMenuItem(m_fontTitle, "SNAKE GAME!", m_graphics.PreferredBackBufferHeight / 4, Color.Black);
+            float bottom = drawMenuItem(m_fontTitle, "Insert Platformer Game Name Here...", m_graphics.PreferredBackBufferHeight / 4, Color.Black);
             bottom = drawMenuItem(m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu, "Join Game", bottom, m_currentSelection == MenuState.NewGame ? Color.White : Color.LightGray);
 
             bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.White : Color.LightGray);
@@ -110,12 +275,12 @@ namespace PlatformerGameClient.Views
 
             bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.White : Color.LightGray);
             drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.White : Color.LightGray);
-*/
+
 
             m_spriteBatch.End();
-        }
 
-        public float renderMenuItem(SpriteFont font, string text, float y, Color color, SpriteBatch m_spriteBatch, GraphicsDeviceManager m_graphics)
+        }
+        private float drawMenuItem(SpriteFont font, string text, float y, Color color)
         {
 
             float scale = m_graphics.PreferredBackBufferWidth / 1920f;
@@ -131,12 +296,46 @@ namespace PlatformerGameClient.Views
                            SpriteEffects.None,
                            0);
 
+            if (text == "Join Game")
+            {
+                gameplay = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+            }
+            if (text == "High Scores")
+            {
+                highScores = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+
+            }
+            if (text == "Help")
+            {
+                help = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+
+            }
+            if (text == "About")
+            {
+                about = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+
+            }
+            if (text == "Quit")
+            {
+                quit = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+
+            }
+            if (text == "Settings")
+            {
+                settings = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+            }
             return y + stringSize.Y;
         }
 
+
         public override void update(GameTime gameTime)
         {
+
+
+
         }
+
+        
     }
 
 }

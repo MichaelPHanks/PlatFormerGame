@@ -5,6 +5,7 @@ using PlatformerGameClient.Enums;
 using PlatformerGameClient.Interfaces;
 using PlatformerGameClient.Views;
 using System.Collections.Generic;
+using System.Runtime;
 
 namespace PlatformerGame
 {
@@ -28,7 +29,8 @@ namespace PlatformerGame
             m_gameStates = new Dictionary<GameStateEnum, IGameState>
             {
                 { GameStateEnum.MainMenu, new MainMenuView() },
-                { GameStateEnum.GamePlay, new GamePlayView()}
+                { GameStateEnum.GamePlay, new GamePlayView()},
+                { GameStateEnum.Settings, new SettingsView()}
             };
             m_currentState = m_gameStates[GameStateEnum.MainMenu];
             foreach (var item in m_gameStates)
@@ -54,10 +56,63 @@ namespace PlatformerGame
 
             GameStateEnum nextStateEnum = this.m_currentState.processInput(gameTime);
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (nextStateEnum == GameStateEnum.Exit)
+            {
                 Exit();
+            }
+            else
+            {
+                m_currentState.update(gameTime);
 
-            // TODO: Add your update logic here
+
+              /*  if (m_prevState == m_gameStates[GameStateEnum.Tutorial] && nextStateEnum == GameStateEnum.GamePlay)
+                {
+                    m_gamePlayView.ConnectToServer();
+
+                }
+
+                *//*if (m_prevState == m_gameStates[GameStateEnum.GamePlay] && nextStateEnum == GameStateEnum.Paused)
+                {
+                    savedGamePlay = m_currentState;
+                }*//*
+
+
+
+
+
+                if (nextStateEnum == GameStateEnum.Settings && m_gameState != GameStateEnum.Settings)
+                {
+
+                    m_settings.prevState = m_gameState;
+
+
+                }
+
+
+                if (nextStateEnum == GameStateEnum.Help && m_gameState != GameStateEnum.Help)
+                {
+
+                    m_helpView.helpPrevState = m_gameState;
+
+
+                }
+
+                if (nextStateEnum == GameStateEnum.HighScores)
+                {
+                    m_gameStates[nextStateEnum] = null;
+                    m_gameStates[nextStateEnum] = new HighScoresView();
+                    m_gameStates[nextStateEnum].initialize(this.GraphicsDevice, m_graphics);
+                    m_gameStates[nextStateEnum].loadContent(this.Content);
+
+
+                }*/
+
+
+                m_currentState = m_gameStates[nextStateEnum];
+             /*   m_prevState = m_gameStates[nextStateEnum];
+                m_gameState = nextStateEnum;*/
+
+            }
 
             base.Update(gameTime);
         }

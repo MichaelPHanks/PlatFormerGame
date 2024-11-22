@@ -30,3 +30,7 @@ C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Platf
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.dll
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\PlatformerGameShared.pdb
 C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Fonts\menu.xnb
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Fonts\menu-selected.xnb
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Fonts\mainmenuTitle.xnb
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Sounds\little_robot_sound_factory_multimedia_Click_Electronic_14.ogg
+C:\Users\mhank\source\repos\PlatformerGame\PlatformerGame\bin\Debug\net6.0\Content\Sounds\little_robot_sound_factory_multimedia_Click_Electronic_14.xnb

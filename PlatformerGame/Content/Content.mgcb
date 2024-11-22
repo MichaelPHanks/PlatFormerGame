@@ -13,10 +13,30 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/mainmenuTitle.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/mainmenuTitle.spritefont
+
+#begin Fonts/menu-selected.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/menu-selected.spritefont
+
 #begin Fonts/menu.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/menu.spritefont
+
+#begin Sounds/little_robot_sound_factory_multimedia_Click_Electronic_14.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/little_robot_sound_factory_multimedia_Click_Electronic_14.mp3
 
