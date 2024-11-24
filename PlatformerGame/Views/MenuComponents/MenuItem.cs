@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Rendering;
 
-namespace PlatformerGameClient.Views
+namespace PlatformerGameClient.Views.MenuComponents
 {
     public class MenuItem
     {
@@ -32,10 +32,10 @@ namespace PlatformerGameClient.Views
             this.m_graphics = m_graphics;
             this.font = font;
             this.spriteBatch = spriteBatch;
-            this.onClick = onClickDelgate;
-            this.y = this.area.Y;
+            onClick = onClickDelgate;
+            y = this.area.Y;
             this.isSelected = isSelected;
-            
+
         }
 
 
@@ -58,7 +58,7 @@ namespace PlatformerGameClient.Views
                            scale,
                            SpriteEffects.None,
                            0);
-            this.area = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
+            area = new Rectangle(m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
 
             /*return y + stringSize.Y;*/
 
@@ -70,10 +70,13 @@ namespace PlatformerGameClient.Views
             Vector2 stringSize = font.MeasureString(text) * scale;
             return y + stringSize.Y;
         }
-
+        public void setBottom(float bottom)
+        {
+            this.y = bottom;    
+        }
         public bool getIsSelected()
         {
-            return this.isSelected;
+            return isSelected;
         }
 
         public void setIsSelected(bool isSelected)
@@ -88,7 +91,7 @@ namespace PlatformerGameClient.Views
 
         public bool isHoveredOver()
         {
-            return this.area.Contains(Mouse.GetState().Position);
+            return area.Contains(Mouse.GetState().Position);
         }
 
 
@@ -96,12 +99,17 @@ namespace PlatformerGameClient.Views
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isSelected)
             {
-                this.Clicked(gameTime);
+                Clicked(gameTime);
+            }
+
+            else if (Mouse.GetState().LeftButton == ButtonState.Pressed && isHoveredOver())
+            {
+                Clicked(gameTime);
             }
         }
 
 
-        private void Clicked(GameTime gameTime) 
+        private void Clicked(GameTime gameTime)
         {
             // Insert some stuff here
 
@@ -112,6 +120,6 @@ namespace PlatformerGameClient.Views
             }
         }
 
-        
+
     }
 }

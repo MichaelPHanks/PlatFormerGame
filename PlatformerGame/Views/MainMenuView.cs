@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Enums;
 using PlatformerGameClient.InputHandling;
 using PlatformerGameClient.Rendering;
+using PlatformerGameClient.Views.MenuComponents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,6 +49,7 @@ namespace PlatformerGameClient.Views
 
         private MenuItem newGame;
         private MenuItem exit;
+        private MenuItem settingsItem;
 
 
         // TODO: Make a 'MenuItemsList' Class, which will handle a list of items and how they are moved around and stuff.
@@ -64,6 +66,7 @@ namespace PlatformerGameClient.Views
             About,*/
             Quit,
             /*None,*/
+            Settings
         }
 
         private MenuState m_currentSelection = MenuState.NewGame;
@@ -91,6 +94,7 @@ namespace PlatformerGameClient.Views
             {
                 {MenuState.NewGame, "New Game!" },
                 {MenuState.Quit, "Exit" },
+                { MenuState.Settings, "Settings"}
             };
 
 
@@ -110,9 +114,22 @@ namespace PlatformerGameClient.Views
             stringSize = m_fontMenu.MeasureString("Exit") * scale;
 
             exit = new MenuItem("Exit", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(exitOnClick), false);
-            menuItems = new List<MenuItem> { newGame,exit };
+            bottom += stringSize.Y;
+            stringSize = m_fontMenu.MeasureString("Settings") * scale;
+
+            settingsItem = new MenuItem("Settings", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(settingsClicked), false);
+
+
+
+
+            menuItems = new List<MenuItem> { newGame,exit, settingsItem };
             /*keyInput.registerCommand(Keys.Enter, true, new IInputDevice.CommandDelegate(EnterHit));*/
 
+        }
+
+        public void settingsClicked(GameTime gameTime)
+        {
+            Console.WriteLine("Settings button was clicked!");
         }
 
 
@@ -150,10 +167,11 @@ namespace PlatformerGameClient.Views
             }
             else
             {
-                this.m_currentSelection = MenuState.Quit;
+                this.m_currentSelection = MenuState.Settings;
             }
 
 
+            float bottom = 0;
             foreach (MenuItem item in menuItems)
             {
                 if (m_gameStates[this.m_currentSelection] == item.text)
@@ -161,6 +179,10 @@ namespace PlatformerGameClient.Views
                     // This item is selected.
                     item.setIsSelected(true);
                     item.changeFont(m_fontMenuSelect);
+                    if (item != menuItems[0])
+                    {
+                        item.setBottom(bottom);
+                    }
 
                 }
 
@@ -169,14 +191,19 @@ namespace PlatformerGameClient.Views
                     // TODO: Find a way so we do not have to do this every time!
                     item.setIsSelected(false);
                     item.changeFont(m_fontMenu);
-
+                    if (item != menuItems[0])
+                    {
+                        item.setBottom(bottom);
+                    }
                 }
+                bottom = item.getStringSize();
+
             }
         }
 
         private void DownHit(GameTime gameTime)
         {
-            if ((int)m_currentSelection < 1)
+            if ((int)m_currentSelection < 2)
             {
                 this.m_currentSelection += 1;
             }
@@ -184,6 +211,8 @@ namespace PlatformerGameClient.Views
             {
                 this.m_currentSelection = MenuState.NewGame;
             }
+
+            float bottom = 0;
             foreach (MenuItem item in menuItems)
             {
                 if (m_gameStates[this.m_currentSelection] == item.text)
@@ -191,6 +220,10 @@ namespace PlatformerGameClient.Views
                     // This item is selected.
                     item.setIsSelected(true);
                     item.changeFont(m_fontMenuSelect);
+                    if (item != menuItems[0])
+                    {
+                        item.setBottom(bottom);
+                    }
 
                 }
 
@@ -199,8 +232,13 @@ namespace PlatformerGameClient.Views
                     // TODO: Find a way so we do not have to do this every time!
                     item.setIsSelected(false);
                     item.changeFont(m_fontMenu);
-
+                    if (item != menuItems[0])
+                    {
+                        item.setBottom(bottom);
+                    }
                 }
+                bottom = item.getStringSize();
+
             }
         }
         private void modifyY()
@@ -214,20 +252,32 @@ namespace PlatformerGameClient.Views
 
         private void modifyHover(MenuItem item)
         {
+            float bottom = 0;
             foreach (MenuItem item2 in menuItems)
             {
-                // Compare by text, because no two items should have the same text in a view.
-                if (item.text == item2.text)
+                if (item2.text == item.text)
                 {
-                    item.setIsSelected(true);
-                    item.changeFont(m_fontMenuSelect);
+                    // This item is selected.
+                    item2.setIsSelected(true);
+                    item2.changeFont(m_fontMenuSelect);
+                    if (item2 != menuItems[0])
+                    {
+                        item2.setBottom(bottom);
+                    }
 
                 }
+
                 else
                 {
-                    item.setIsSelected(false);
-                    item.changeFont(m_fontMenu);
+                    // TODO: Find a way so we do not have to do this every time!
+                    item2.setIsSelected(false);
+                    item2.changeFont(m_fontMenu);
+                    if (item2 != menuItems[0])
+                    {
+                        item2.setBottom(bottom);
+                    }
                 }
+                bottom = item2.getStringSize();
 
             }
 
