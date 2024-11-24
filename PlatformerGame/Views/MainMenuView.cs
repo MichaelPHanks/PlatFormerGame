@@ -49,6 +49,8 @@ namespace PlatformerGameClient.Views
         private MenuItem newGame;
         private MenuItem exit;
 
+
+        // TODO: Make a 'MenuItemsList' Class, which will handle a list of items and how they are moved around and stuff.
         private List<MenuItem> menuItems;
     
 
