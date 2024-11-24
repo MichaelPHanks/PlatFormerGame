@@ -76,6 +76,9 @@ namespace PlatformerGameClient.Views
         private Dictionary<Rectangle, MenuState> m_shapeToState;
 
 
+        private bool settingsFlag = false;
+        private bool exitFlag = false;
+
         private KeyboardInput keyInput;
 
 
@@ -130,6 +133,7 @@ namespace PlatformerGameClient.Views
         public void settingsClicked(GameTime gameTime)
         {
             Console.WriteLine("Settings button was clicked!");
+            settingsFlag = true;
         }
 
 
@@ -143,6 +147,7 @@ namespace PlatformerGameClient.Views
         public void exitOnClick(GameTime gameTime)
         {
             Console.WriteLine("Exit was clicked!");
+            exitFlag = true;
         }
 
         /// <summary>
@@ -301,154 +306,170 @@ namespace PlatformerGameClient.Views
 
             keyInput.Update(gameTime);
 
-            foreach (MenuItem item in menuItems)
+
+            if (isEnterUp && canUseMouse)
             {
-                item.processInput(gameTime);
+                foreach (MenuItem item in menuItems)
+                {
+                    item.processInput(gameTime);
+                }
             }
 
-
-
-           /* keyInput.Update(gameTime);*/
-
-           /* if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+            if (Keyboard.GetState().IsKeyUp(Keys.Enter))
             {
                 isEnterUp = true;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isEnterUp)
-            {
-                setKeyAndMouseDefaults(gameTime);
-                try
-                {
-                    return m_gameStates[m_currentSelection];
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return GameStateEnum.MainMenu;
-                }
+            /* keyInput.Update(gameTime);*/
 
-            }
-            Console.WriteLine("Got in here");
+            /* if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+             {
+                 isEnterUp = true;
+             }
 
-            Point mousePoint = Mouse.GetState().Position;*/
-           /* if (canUseMouse)
-            {
-                // Loop through the rectangles
-                *//*foreach (Rectangle rec in m_rectangles.Values)
-                {
-                    // If the mouse point is not in the rectangle, skip the rest of the logic.
-                    if (rec.Contains(mousePoint))
-                    {
-                        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                        {
-                            setKeyAndMouseDefaults(gameTime);
-                            return m_gameStates[m_shapeToState[rec]];
-                        }
+             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isEnterUp)
+             {
+                 setKeyAndMouseDefaults(gameTime);
+                 try
+                 {
+                     return m_gameStates[m_currentSelection];
+                 }
+                 catch (Exception e)
+                 {
+                     Console.WriteLine(e);
+                     return GameStateEnum.MainMenu;
+                 }
 
-                        m_currentSelection = m_shapeToState[rec];
-                    }
-                    
+             }
+             Console.WriteLine("Got in here");
 
+             Point mousePoint = Mouse.GetState().Position;*/
+            /* if (canUseMouse)
+             {
+                 // Loop through the rectangles
+                 *//*foreach (Rectangle rec in m_rectangles.Values)
+                 {
+                     // If the mouse point is not in the rectangle, skip the rest of the logic.
+                     if (rec.Contains(mousePoint))
+                     {
+                         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                         {
+                             setKeyAndMouseDefaults(gameTime);
+                             return m_gameStates[m_shapeToState[rec]];
+                         }
 
-
-
-                }*//*
-
-
-
-
-
-                if (gameplay.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
-
-                        return GameStateEnum.EnterName;
-                    }
-                    m_currentSelection = MenuState.NewGame;
+                         m_currentSelection = m_shapeToState[rec];
+                     }
 
 
 
-                }
-                else if (help.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
 
-                        return GameStateEnum.Help;
-                    }
-                    m_currentSelection = MenuState.Help;
 
-                }
-                else if (about.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
-
-                        return GameStateEnum.About;
-                    }
-                    m_currentSelection = MenuState.About;
-
-                }
-                else if (highScores.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
-
-                        return GameStateEnum.HighScores;
-                    }
-                    m_currentSelection = MenuState.HighScores;
-
-                }
-                else if (quit.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
-
-                        return GameStateEnum.Exit;
-                    }
-                    m_currentSelection = MenuState.Quit;
-
-                }
-
-                else if (settings.Contains(Mouse.GetState().Position))
-                {
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    {
-                        canUseMouse = false;
-                        isEnterUp = false;
-
-                        return GameStateEnum.Settings;
-                    }
-                    m_currentSelection = MenuState.Settings;
-
-                }
-            }
-
-            if (m_prevSelection != m_currentSelection && m_currentSelection != MenuState.None)
-            {
-                if (soundInstance.State == SoundState.Playing)
-                {
-                    soundInstance.Stop();
-
-                }
-                soundInstance.Play();
-
-            }
+                 }*//*
 
 
 
+
+
+                 if (gameplay.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.EnterName;
+                     }
+                     m_currentSelection = MenuState.NewGame;
+
+
+
+                 }
+                 else if (help.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.Help;
+                     }
+                     m_currentSelection = MenuState.Help;
+
+                 }
+                 else if (about.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.About;
+                     }
+                     m_currentSelection = MenuState.About;
+
+                 }
+                 else if (highScores.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.HighScores;
+                     }
+                     m_currentSelection = MenuState.HighScores;
+
+                 }
+                 else if (quit.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.Exit;
+                     }
+                     m_currentSelection = MenuState.Quit;
+
+                 }
+
+                 else if (settings.Contains(Mouse.GetState().Position))
+                 {
+                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                     {
+                         canUseMouse = false;
+                         isEnterUp = false;
+
+                         return GameStateEnum.Settings;
+                     }
+                     m_currentSelection = MenuState.Settings;
+
+                 }
+             }
+
+             if (m_prevSelection != m_currentSelection && m_currentSelection != MenuState.None)
+             {
+                 if (soundInstance.State == SoundState.Playing)
+                 {
+                     soundInstance.Stop();
+
+                 }
+                 soundInstance.Play();
+
+             }
+
+
+
+             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+             {
+                 canUseMouse = false;
+             }
+             if (Mouse.GetState().LeftButton == ButtonState.Released)
+             {
+                 canUseMouse = true;
+             }
+             m_prevSelection = m_currentSelection;*/
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 canUseMouse = false;
@@ -457,7 +478,21 @@ namespace PlatformerGameClient.Views
             {
                 canUseMouse = true;
             }
-            m_prevSelection = m_currentSelection;*/
+            if (settingsFlag)
+            {
+                setKeyAndMouseDefaults(gameTime);
+                settingsFlag = false;
+                return GameStateEnum.Settings;
+            }
+
+            if (exitFlag)
+            {
+                setKeyAndMouseDefaults(gameTime);
+                exitFlag = false;
+                return GameStateEnum.Exit;
+            }
+
+
 
             return GameStateEnum.MainMenu;
         }
