@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlatformerGameClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07448b68648883ca6213af3cdabdd25cc3f4b2e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+558555e7b8cf5033a605951755fb22191ae07019")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlatformerGameClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlatformerGameClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

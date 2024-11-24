@@ -4,10 +4,14 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Enums;
+using PlatformerGameClient.InputHandling;
 using PlatformerGameClient.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,12 +24,12 @@ namespace PlatformerGameClient.Views
         private SpriteFont m_fontMenu;
         private SpriteFont m_fontMenuSelect;
         private SpriteFont m_fontTitle;
-        private Rectangle gameplay = new Rectangle();
-        private Rectangle about = new Rectangle();
-        private Rectangle quit = new Rectangle();
-        private Rectangle help = new Rectangle();
-        private Rectangle highScores = new Rectangle();
-        private Rectangle settings = new Rectangle();
+        private Rectangle gameplay = new();
+        private Rectangle about = new();
+        private Rectangle quit = new();
+        private Rectangle help = new();
+        private Rectangle highScores = new();
+        private Rectangle settings = new();
 
         private Dictionary<MenuState, MenuItem> m_menuItems = new Dictionary<MenuState, MenuItem>();
         
@@ -56,6 +60,11 @@ namespace PlatformerGameClient.Views
         private MenuState m_currentSelection = MenuState.NewGame;
         private MenuState m_prevSelection = MenuState.NewGame;
         private bool m_waitForKeyRelease = false;
+        private Dictionary<MenuState, GameStateEnum> m_gameStates;
+        private Dictionary<Rectangle, MenuState> m_shapeToState;
+
+
+        private KeyboardInput keyInput;
 
 
 
@@ -67,93 +76,143 @@ namespace PlatformerGameClient.Views
            /* mainBackground = contentManager.Load<Texture2D>("MainBackground");*/
             m_fontTitle = contentManager.Load<SpriteFont>("Fonts/mainmenuTitle");
             soundInstance = hover.CreateInstance();
+           /* m_rectangles = new Dictionary<string, Rectangle>
+            {
+                {"Join Game", gameplay},
+                {"High Scores" , highScores},
+                {"About", about },
+                {"Quit" , quit},
+                {"Settings", settings },
+                { "Help", help}
+
+            };*/
+
+            m_gameStates = new Dictionary<MenuState, GameStateEnum> 
+            {
+                {MenuState.NewGame, GameStateEnum.GamePlay },
+                {MenuState.About, GameStateEnum.About },
+                {MenuState.Settings, GameStateEnum.Settings },
+                {MenuState.Quit, GameStateEnum.Exit },
+                {MenuState.HighScores, GameStateEnum.HighScores },
+                {MenuState.Help, GameStateEnum.Help }
+            };
+
+            /*m_shapeToState = new Dictionary<Rectangle, MenuState>
+            {
+                { gameplay, MenuState.NewGame},
+                { highScores, MenuState.HighScores},
+                { about, MenuState.About},
+                { quit, MenuState.Quit },
+                { help, MenuState.Help },
+                { settings, MenuState.Settings }
+
+            };*/
+
+
+            keyInput = new KeyboardInput();
+
+            keyInput.registerCommand(Keys.Up, true, new IInputDevice.CommandDelegate(UpHit));
+            keyInput.registerCommand(Keys.Down, true, new IInputDevice.CommandDelegate(DownHit));
+            /*keyInput.registerCommand(Keys.Enter, true, new IInputDevice.CommandDelegate(EnterHit));*/
+
+        }
+
+        /// <summary>
+        /// This method is for when we leave this view, 
+        /// we are setting the values to false because when we come back, 
+        /// we want a small delay in what we can and cannot hit on the screen.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void setKeyAndMouseDefaults(GameTime gameTime)
+        {
+            isEnterUp = false;
+            canUseMouse = false;
+        }
+
+
+
+        private void modifyGamePlay(Rectangle rectangle)
+        {
+            gameplay = rectangle;
+        }
+
+        private void UpHit(GameTime gameTime)
+        {
+            if (m_currentSelection > 0)
+            {
+                this.m_currentSelection -= 1;
+            }
+            else
+            {
+                this.m_currentSelection = MenuState.Quit;
+            }
+        }
+
+        private void DownHit(GameTime gameTime)
+        {
+            if ((int)m_currentSelection < 5)
+            {
+                this.m_currentSelection += 1;
+            }
+            else
+            {
+                this.m_currentSelection = MenuState.NewGame;
+            }
         }
         public override GameStateEnum processInput(GameTime gameTime)
         {
+
+            keyInput.Update(gameTime);
 
             if (Keyboard.GetState().IsKeyUp(Keys.Enter))
             {
                 isEnterUp = true;
             }
 
-
-            if (!m_waitForKeyRelease && isEnterUp)
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isEnterUp)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                setKeyAndMouseDefaults(gameTime);
+                try
                 {
-                    if (m_currentSelection == MenuState.Quit)
-                    {
-                        m_currentSelection = MenuState.NewGame;
-                    }
-                    else
-                    {
-                        m_currentSelection++;
-                    }
-                    m_waitForKeyRelease = true;
+                    return m_gameStates[m_currentSelection];
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                catch (Exception e)
                 {
-                    if (m_currentSelection == MenuState.NewGame)
-                    {
-                        m_currentSelection = MenuState.Quit;
-                    }
-                    else
-                    {
-                        m_currentSelection--;
-                    }
-                    m_waitForKeyRelease = true;
+                    Console.WriteLine(e);
+                    return GameStateEnum.MainMenu;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
-                {
-                    canUseMouse = false;
-                    isEnterUp = false;
-                    return GameStateEnum.EnterName;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.HighScores)
-                {
-                    isEnterUp = false;
-                    canUseMouse = false;
-
-                    return GameStateEnum.HighScores;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
-                {
-                    isEnterUp = false;
-                    canUseMouse = false;
-
-                    return GameStateEnum.Help;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
-                {
-                    isEnterUp = false;
-                    canUseMouse = false;
-
-                    return GameStateEnum.About;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Quit)
-                {
-                    isEnterUp = false;
-                    canUseMouse = false;
-
-                    return GameStateEnum.Exit;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Settings)
-                {
-                    isEnterUp = false;
-                    canUseMouse = false;
-
-                    return GameStateEnum.Settings;
-                }
             }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
-            {
-                m_waitForKeyRelease = false;
-            }
+            Console.WriteLine("Got in here");
 
-
+            Point mousePoint = Mouse.GetState().Position;
             if (canUseMouse)
             {
+                // Loop through the rectangles
+                /*foreach (Rectangle rec in m_rectangles.Values)
+                {
+                    // If the mouse point is not in the rectangle, skip the rest of the logic.
+                    if (rec.Contains(mousePoint))
+                    {
+                        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                        {
+                            setKeyAndMouseDefaults(gameTime);
+                            return m_gameStates[m_shapeToState[rec]];
+                        }
+
+                        m_currentSelection = m_shapeToState[rec];
+                    }
+                    
+
+
+
+
+                }*/
+
+
+
+
+
                 if (gameplay.Contains(Mouse.GetState().Position))
                 {
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -230,10 +289,6 @@ namespace PlatformerGameClient.Views
 
                 }
             }
-            /*else 
-            {
-                m_currentSelection = MenuState.None;
-            }*/
 
             if (m_prevSelection != m_currentSelection && m_currentSelection != MenuState.None)
             {
@@ -245,6 +300,9 @@ namespace PlatformerGameClient.Views
                 soundInstance.Play();
 
             }
+
+
+
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 canUseMouse = false;
@@ -295,7 +353,6 @@ namespace PlatformerGameClient.Views
                            scale,
                            SpriteEffects.None,
                            0);
-
             if (text == "Join Game")
             {
                 gameplay = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
@@ -324,6 +381,7 @@ namespace PlatformerGameClient.Views
             {
                 settings = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
             }
+
             return y + stringSize.Y;
         }
 

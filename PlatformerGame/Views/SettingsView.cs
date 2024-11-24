@@ -74,6 +74,12 @@ namespace PlatformerGameClient.Views
         public override GameStateEnum processInput(GameTime gameTime)
         {
             keyboard.Update(gameTime);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                return GameStateEnum.MainMenu;
+
+            }
             return GameStateEnum.Settings;
         }
 
