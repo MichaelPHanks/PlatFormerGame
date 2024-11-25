@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Enums;
 using PlatformerGameClient.InputHandling;
+using PlatformerGameClient.Views.MenuComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,9 @@ namespace PlatformerGameClient.Views
         KeyboardInput keyboard;
 
 
+        MenuItemList m_menulist;
+
+
         private enum KeySelection
         {
             Up,
@@ -56,6 +60,9 @@ namespace PlatformerGameClient.Views
             keyboard.registerCommand(Keys.Up, true, new IInputDevice.CommandDelegate(UpHit));
             keyboard.registerCommand(Keys.Down, true, new IInputDevice.CommandDelegate(DownHit));
 
+
+
+           /* m_menulist = new MenuItemList();*/
         }
 
         public void UpHit(GameTime gameTime)

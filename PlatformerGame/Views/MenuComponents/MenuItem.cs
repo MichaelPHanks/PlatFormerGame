@@ -8,7 +8,7 @@ using PlatformerGameClient.Rendering;
 
 namespace PlatformerGameClient.Views.MenuComponents
 {
-    public class MenuItem
+    public class MenuItem : MenuObject
     {
 
         public string text;
@@ -19,8 +19,12 @@ namespace PlatformerGameClient.Views.MenuComponents
         public SpriteBatch spriteBatch;
 
         public delegate void OnClick(GameTime gameTime);
+        public delegate void OnHover(GameTime gameTime, MenuItem menuItem);
 
         private OnClick onClick;
+
+
+        private OnHover onHover;
 
         private bool isSelected = false;
 
@@ -44,7 +48,7 @@ namespace PlatformerGameClient.Views.MenuComponents
             this.area = area;
         }
 
-        public void draw()
+        public override void draw()
         {
             float scale = m_graphics.PreferredBackBufferWidth / 1920f;
             Vector2 stringSize = font.MeasureString(text) * scale;
@@ -60,7 +64,6 @@ namespace PlatformerGameClient.Views.MenuComponents
                            0);
             area = new Rectangle(m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
 
-            /*return y + stringSize.Y;*/
 
         }
 
@@ -82,6 +85,7 @@ namespace PlatformerGameClient.Views.MenuComponents
         public void setIsSelected(bool isSelected)
         {
             this.isSelected = isSelected;
+            
         }
 
         public void changeFont(SpriteFont font)
@@ -95,7 +99,7 @@ namespace PlatformerGameClient.Views.MenuComponents
         }
 
 
-        public void processInput(GameTime gameTime)
+        public override void processInput(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isSelected)
             {
@@ -106,7 +110,21 @@ namespace PlatformerGameClient.Views.MenuComponents
             {
                 Clicked(gameTime);
             }
+
+
+            setIsSelected(isHoveredOver());
+
+
+            if (isSelected)
+            {
+                Hovered(gameTime);
+            }
+            
+            
         }
+
+
+        
 
 
         private void Clicked(GameTime gameTime)
@@ -120,6 +138,30 @@ namespace PlatformerGameClient.Views.MenuComponents
             }
         }
 
+        /// <summary>
+        /// This will sometimes not happen, especially for menu items in a menu item list, as that list will handle the font changes.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void Hovered(GameTime gameTime)
+        {
+            if (onHover != null)
+            {
+                onHover(gameTime, this);
+            }
+        }
 
+        public void registerHover(OnHover onHover)
+        {
+            this.onHover = onHover;
+        }
+
+        
+        /// <summary>
+        /// We don't need to do anything quite yet.
+        /// </summary>
+        public override void selectionChanged()
+        {
+            
+        }
     }
 }

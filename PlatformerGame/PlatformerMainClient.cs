@@ -28,7 +28,7 @@ namespace PlatformerGame
             // TODO: Add your initialization logic here
             m_gameStates = new Dictionary<GameStateEnum, IGameState>
             {
-                { GameStateEnum.MainMenu, new MainMenuView() },
+                { GameStateEnum.MainMenu, new MainMenuVewTest() },
                 { GameStateEnum.GamePlay, new GamePlayView()},
                 { GameStateEnum.Settings, new SettingsView()}
             };
