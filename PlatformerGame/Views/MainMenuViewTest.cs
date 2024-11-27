@@ -212,9 +212,11 @@ namespace PlatformerGameClient.Views
             foreach (MenuObject item in m_menuObjects)
             {
                 item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+                currentSelection = this.m_gameStates[this.m_currentSelection];
+
             }
 
-            
+
         }
 
         private void DownHit(GameTime gameTime)
@@ -231,6 +233,7 @@ namespace PlatformerGameClient.Views
             foreach (MenuObject item in m_menuObjects)
             {
                 item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+                currentSelection = this.m_gameStates[this.m_currentSelection];
             }
 
 
