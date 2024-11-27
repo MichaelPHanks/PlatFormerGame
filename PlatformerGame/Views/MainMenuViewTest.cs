@@ -60,6 +60,7 @@ namespace PlatformerGameClient.Views
 
         private enum MenuState
         {
+            Back,
             NewGame,
             /*HighScores,
             Help,
@@ -84,6 +85,10 @@ namespace PlatformerGameClient.Views
 
         private List<MenuObject> m_menuObjects;
 
+        private string currentSelection = "New Game!";
+
+        private ControllerInput ControllerInput;
+
 
 
         public override void loadContent(ContentManager contentManager)
@@ -100,7 +105,8 @@ namespace PlatformerGameClient.Views
             {
                 {MenuState.NewGame, "New Game!" },
                 {MenuState.Quit, "Exit" },
-                { MenuState.Settings, "Settings"}
+                { MenuState.Settings, "Settings"},
+                {MenuState.Back, "<--" }
             };
 
 
@@ -115,15 +121,15 @@ namespace PlatformerGameClient.Views
             float scale = m_graphics.PreferredBackBufferWidth / 1920f;
             Vector2 stringSize = m_fontMenuSelect.MeasureString("New Game!") * scale;
             float bottom = m_graphics.PreferredBackBufferWidth / 4;
-            newGame = new MenuItem("New Game!", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(newGameOnClick), true);
+            newGame = new MenuItem("New Game!", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(newGameOnClick), true, m_fontMenuSelect);
             bottom += stringSize.Y;
             stringSize = m_fontMenu.MeasureString("Exit") * scale;
 
-            exit = new MenuItem("Exit", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(exitOnClick), false);
+            exit = new MenuItem("Exit", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(exitOnClick), false, m_fontMenuSelect);
             bottom += stringSize.Y;
             stringSize = m_fontMenu.MeasureString("Settings") * scale;
 
-            settingsItem = new MenuItem("Settings", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(settingsClicked), false);
+            settingsItem = new MenuItem("Settings", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(settingsClicked), false, m_fontMenuSelect);
 
             
 
@@ -133,10 +139,18 @@ namespace PlatformerGameClient.Views
             m_menuList = new MenuItemList(menuItems, m_fontMenu, m_fontMenuSelect, "New Game!");
 
             stringSize = m_fontMenu.MeasureString("<--") * scale;
-            backButton = new MenuItem("<--", new Rectangle(100, 100, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(backClicked), false);
+            backButton = new MenuItem("<--", new Rectangle(100, 100, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(backClicked), false, m_fontMenuSelect);
             backButton.registerHover(new MenuItem.OnHover(onHover));
             /*keyInput.registerCommand(Keys.Enter, true, new IInputDevice.CommandDelegate(EnterHit));*/
             m_menuObjects = new List<MenuObject> {m_menuList, backButton };
+
+            ControllerInput = new ControllerInput();
+
+            ControllerInput.registerCommand(Buttons.DPadUp, true, new IInputDevice.CommandDelegate(UpHit));
+            ControllerInput.registerCommand(Buttons.DPadDown, true, new IInputDevice.CommandDelegate(DownHit));
+            ControllerInput.registerCommand(Buttons.LeftThumbstickUp, true, new IInputDevice.CommandDelegate(UpHit));
+            ControllerInput.registerCommand(Buttons.LeftThumbstickDown, true, new IInputDevice.CommandDelegate(DownHit));
+
         }
 
 
@@ -195,76 +209,31 @@ namespace PlatformerGameClient.Views
                 this.m_currentSelection = MenuState.Settings;
             }
 
-
-           /* float bottom = 0;
-            foreach (MenuItem item in menuItems)
+            foreach (MenuObject item in m_menuObjects)
             {
-                if (m_gameStates[this.m_currentSelection] == item.text)
-                {
-                    // This item is selected.
-                    item.setIsSelected(true);
-                    item.changeFont(m_fontMenuSelect);
-                    if (item != menuItems[0])
-                    {
-                        item.setBottom(bottom);
-                    }
+                item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+            }
 
-                }
-
-                else
-                {
-                    // TODO: Find a way so we do not have to do this every time!
-                    item.setIsSelected(false);
-                    item.changeFont(m_fontMenu);
-                    if (item != menuItems[0])
-                    {
-                        item.setBottom(bottom);
-                    }
-                }
-                bottom = item.getStringSize();
-
-            }*/
+            
         }
 
         private void DownHit(GameTime gameTime)
         {
-            if ((int)m_currentSelection < 2)
+            if ((int)m_currentSelection < 3)
             {
                 this.m_currentSelection += 1;
             }
             else
             {
-                this.m_currentSelection = MenuState.NewGame;
+                this.m_currentSelection = MenuState.Back;
             }
 
-            /*float bottom = 0;
-            foreach (MenuItem item in menuItems)
+            foreach (MenuObject item in m_menuObjects)
             {
-                if (m_gameStates[this.m_currentSelection] == item.text)
-                {
-                    // This item is selected.
-                    item.setIsSelected(true);
-                    item.changeFont(m_fontMenuSelect);
-                    if (item != menuItems[0])
-                    {
-                        item.setBottom(bottom);
-                    }
+                item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+            }
 
-                }
 
-                else
-                {
-                    // TODO: Find a way so we do not have to do this every time!
-                    item.setIsSelected(false);
-                    item.changeFont(m_fontMenu);
-                    if (item != menuItems[0])
-                    {
-                        item.setBottom(bottom);
-                    }
-                }
-                bottom = item.getStringSize();
-
-            }*/
         }
         private void modifyY()
         {
@@ -277,69 +246,57 @@ namespace PlatformerGameClient.Views
 
         private void modifyHover(MenuItem item)
         {
-            /*float bottom = 0;
-            foreach (MenuItem item2 in menuItems)
-            {
-                if (item2.text == item.text)
-                {
-                    // This item is selected.
-                    item2.setIsSelected(true);
-                    item2.changeFont(m_fontMenuSelect);
-                    if (item2 != menuItems[0])
-                    {
-                        item2.setBottom(bottom);
-                    }
-
-                }
-
-                else
-                {
-                    // TODO: Find a way so we do not have to do this every time!
-                    item2.setIsSelected(false);
-                    item2.changeFont(m_fontMenu);
-                    if (item2 != menuItems[0])
-                    {
-                        item2.setBottom(bottom);
-                    }
-                }
-                bottom = item2.getStringSize();
-
-            }*/
+            
 
         }
         public override GameStateEnum processInput(GameTime gameTime)
         {
-            // Check if the mouse is hovering over any of the menu items!
-
-            /*foreach (MenuItem item in menuItems)
-            {
-
-                if (item.isHoveredOver())
-                {
-                    // Notify the rest of the items that this is being hovered over
-                    this.modifyHover(item);
-                    break;
-                }
-
-            }*/
             
-            /*m_menuList.processInput(gameTime);*/
 
 
             keyInput.Update(gameTime);
-
+            ControllerInput.Update(gameTime);
 
             if (isEnterUp && canUseMouse)
             {
-                /*foreach (MenuItem item in menuItems)
+           
+
+                string itemSelected = currentSelection;
+                foreach(MenuObject item in m_menuObjects)
                 {
-                    item.processInput(gameTime);
-                }*/
-                /*m_menuList.processInput(gameTime);*/
+                    
+
+                    if (item.isHoveredOver() != "")
+                    {
+                        itemSelected = item.isHoveredOver();
+                        break;
+                    }
+
+                }
+
+                if (itemSelected != currentSelection)
+                {
+                    foreach (MenuObject item in m_menuObjects)
+                    {
+                        item.selectionChanged(itemSelected);
+                    }
+                    currentSelection = itemSelected;
+                    foreach (KeyValuePair<MenuState, string> tempitem in m_gameStates)
+                    {
+                        if (tempitem.Value == currentSelection)
+                        {
+                            m_currentSelection = tempitem.Key;
+                        }
+                    }
+                }
+
                 foreach (MenuObject menuObject in m_menuObjects)
                 {
                     menuObject.processInput(gameTime);
                 }
+
+
+
             }
 
             if (Keyboard.GetState().IsKeyUp(Keys.Enter))
@@ -347,156 +304,7 @@ namespace PlatformerGameClient.Views
                 isEnterUp = true;
             }
 
-            /* keyInput.Update(gameTime);*/
-
-            /* if (Keyboard.GetState().IsKeyUp(Keys.Enter))
-             {
-                 isEnterUp = true;
-             }
-
-             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isEnterUp)
-             {
-                 setKeyAndMouseDefaults(gameTime);
-                 try
-                 {
-                     return m_gameStates[m_currentSelection];
-                 }
-                 catch (Exception e)
-                 {
-                     Console.WriteLine(e);
-                     return GameStateEnum.MainMenu;
-                 }
-
-             }
-             Console.WriteLine("Got in here");
-
-             Point mousePoint = Mouse.GetState().Position;*/
-            /* if (canUseMouse)
-             {
-                 // Loop through the rectangles
-                 *//*foreach (Rectangle rec in m_rectangles.Values)
-                 {
-                     // If the mouse point is not in the rectangle, skip the rest of the logic.
-                     if (rec.Contains(mousePoint))
-                     {
-                         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                         {
-                             setKeyAndMouseDefaults(gameTime);
-                             return m_gameStates[m_shapeToState[rec]];
-                         }
-
-                         m_currentSelection = m_shapeToState[rec];
-                     }
-
-
-
-
-
-                 }*//*
-
-
-
-
-
-                 if (gameplay.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.EnterName;
-                     }
-                     m_currentSelection = MenuState.NewGame;
-
-
-
-                 }
-                 else if (help.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.Help;
-                     }
-                     m_currentSelection = MenuState.Help;
-
-                 }
-                 else if (about.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.About;
-                     }
-                     m_currentSelection = MenuState.About;
-
-                 }
-                 else if (highScores.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.HighScores;
-                     }
-                     m_currentSelection = MenuState.HighScores;
-
-                 }
-                 else if (quit.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.Exit;
-                     }
-                     m_currentSelection = MenuState.Quit;
-
-                 }
-
-                 else if (settings.Contains(Mouse.GetState().Position))
-                 {
-                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                     {
-                         canUseMouse = false;
-                         isEnterUp = false;
-
-                         return GameStateEnum.Settings;
-                     }
-                     m_currentSelection = MenuState.Settings;
-
-                 }
-             }
-
-             if (m_prevSelection != m_currentSelection && m_currentSelection != MenuState.None)
-             {
-                 if (soundInstance.State == SoundState.Playing)
-                 {
-                     soundInstance.Stop();
-
-                 }
-                 soundInstance.Play();
-
-             }
-
-
-
-             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-             {
-                 canUseMouse = false;
-             }
-             if (Mouse.GetState().LeftButton == ButtonState.Released)
-             {
-                 canUseMouse = true;
-             }
-             m_prevSelection = m_currentSelection;*/
+            
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 canUseMouse = false;
@@ -531,16 +339,7 @@ namespace PlatformerGameClient.Views
 
             /* m_spriteBatch.Draw(mainBackground, new Rectangle(0, 0, m_graphics.PreferredBackBufferWidth, m_graphics.PreferredBackBufferHeight), Color.White);*/
 
-            /*float bottom = drawMenuItem(m_fontTitle, "Insert Platformer Game Name Here...", m_graphics.PreferredBackBufferHeight / 4, Color.Black);
-            bottom = drawMenuItem(m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu, "Join Game", bottom, m_currentSelection == MenuState.NewGame ? Color.White : Color.LightGray);
-
-            bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.White : Color.LightGray);
-
-            bottom = drawMenuItem(m_currentSelection == MenuState.Help ? m_fontMenuSelect : m_fontMenu, "Help", bottom, m_currentSelection == MenuState.Help ? Color.White : Color.LightGray);
-            bottom = drawMenuItem(m_currentSelection == MenuState.Settings ? m_fontMenuSelect : m_fontMenu, "Settings", bottom, m_currentSelection == MenuState.Settings ? Color.White : Color.LightGray);
-
-            bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.White : Color.LightGray);
-            drawMenuItem(m_currentSelection == MenuState.Quit ? m_fontMenuSelect : m_fontMenu, "Quit", bottom, m_currentSelection == MenuState.Quit ? Color.White : Color.LightGray);*/
+            
             foreach (MenuObject menuObject in m_menuObjects)
             {
                 menuObject.draw();
@@ -549,53 +348,7 @@ namespace PlatformerGameClient.Views
             m_spriteBatch.End();
 
         }
-        private float drawMenuItem(SpriteFont font, string text, float y, Color color)
-        {
-
-            float scale = m_graphics.PreferredBackBufferWidth / 1920f;
-            Vector2 stringSize = font.MeasureString(text) * scale;
-            m_spriteBatch.DrawString(
-                           font,
-                           text,
-                           new Vector2(m_graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
-                           color,
-                           0,
-                           Vector2.Zero,
-                           scale,
-                           SpriteEffects.None,
-                           0);
-            if (text == "Join Game")
-            {
-                gameplay = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-            }
-            if (text == "High Scores")
-            {
-                highScores = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-
-            }
-            if (text == "Help")
-            {
-                help = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-
-            }
-            if (text == "About")
-            {
-                about = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-
-            }
-            if (text == "Quit")
-            {
-                quit = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-
-            }
-            if (text == "Settings")
-            {
-                settings = new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)y, (int)stringSize.X, (int)stringSize.Y);
-            }
-
-            return y + stringSize.Y;
-        }
-
+      
 
         public override void update(GameTime gameTime)
         {

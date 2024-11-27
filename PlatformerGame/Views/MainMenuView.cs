@@ -112,15 +112,15 @@ namespace PlatformerGameClient.Views
             float scale = m_graphics.PreferredBackBufferWidth / 1920f;
             Vector2 stringSize = m_fontMenuSelect.MeasureString("New Game!") * scale;
             float bottom = m_graphics.PreferredBackBufferWidth / 4;
-            newGame = new MenuItem("New Game!", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(newGameOnClick), true);
+            newGame = new MenuItem("New Game!", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(newGameOnClick), true, m_fontMenuSelect);
             bottom += stringSize.Y;
             stringSize = m_fontMenu.MeasureString("Exit") * scale;
 
-            exit = new MenuItem("Exit", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(exitOnClick), false);
+            exit = new MenuItem("Exit", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(exitOnClick), false, m_fontMenuSelect);
             bottom += stringSize.Y;
             stringSize = m_fontMenu.MeasureString("Settings") * scale;
 
-            settingsItem = new MenuItem("Settings", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(settingsClicked), false);
+            settingsItem = new MenuItem("Settings", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(settingsClicked), false, m_fontMenuSelect);
 
 
 
@@ -294,12 +294,12 @@ namespace PlatformerGameClient.Views
             foreach (MenuItem item in menuItems)
             {
 
-                if (item.isHoveredOver())
+                /*if (item.isHoveredOver())
                 {
                     // Notify the rest of the items that this is being hovered over
                     this.modifyHover(item);
                     break;
-                }
+                }*/
 
             }
 

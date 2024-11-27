@@ -39,7 +39,7 @@ namespace PlatformerGameClient.Views.MenuComponents
 
         public override void processInput(GameTime gameTime)
         {
-            int index = 0;
+            /*int index = 0;
             foreach (MenuItem item in menuItems)
             {
                 if (item.isHoveredOver())
@@ -48,13 +48,27 @@ namespace PlatformerGameClient.Views.MenuComponents
                 }
                 index++;
 
-            }
+            }*/
 
             foreach (MenuItem item in menuItems)
             {
                 item.processInput(gameTime);
             }
 
+        }
+
+        public override string isHoveredOver()
+        {
+            string tempText = "";
+            foreach (MenuItem item in menuItems)
+            {
+                tempText = item.isHoveredOver();
+                if (tempText != "")
+                {
+                    return tempText;
+                }
+            }
+            return "";
         }
 
         private void setMenuItemsSizes()
@@ -98,9 +112,10 @@ namespace PlatformerGameClient.Views.MenuComponents
         /// This is notified (from the View itself) that we are changing the selection to something different.
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public override void selectionChanged()
+        public override void selectionChanged(string selection)
         {
-            throw new NotImplementedException();
+            this.setSelectedItem(selection, 0);
+            
         }
     }
 }

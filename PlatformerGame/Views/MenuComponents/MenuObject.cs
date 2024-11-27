@@ -20,8 +20,10 @@ namespace PlatformerGameClient.Views.MenuComponents
         public abstract void draw();
 
 
-        public abstract void selectionChanged();
+        public abstract void selectionChanged(string selection);
 
         public abstract void processInput(GameTime gameTime);
+
+        public abstract string isHoveredOver();
     }
 }

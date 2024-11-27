@@ -16,6 +16,7 @@ namespace PlatformerGameClient.Views.MenuComponents
         public float x;
         public GraphicsDeviceManager m_graphics;
         public SpriteFont font;
+        public SpriteFont baseFont;
         public SpriteBatch spriteBatch;
 
         public delegate void OnClick(GameTime gameTime);
@@ -26,10 +27,12 @@ namespace PlatformerGameClient.Views.MenuComponents
 
         private OnHover onHover;
 
+        private SpriteFont m_selectedFont;
+
         private bool isSelected = false;
 
         private float y = 0f;
-        public MenuItem(string text, Rectangle area, GraphicsDeviceManager m_graphics, SpriteFont font, SpriteBatch spriteBatch, OnClick onClickDelgate, bool isSelected)
+        public MenuItem(string text, Rectangle area, GraphicsDeviceManager m_graphics, SpriteFont font, SpriteBatch spriteBatch, OnClick onClickDelgate, bool isSelected, SpriteFont selectedFont)
         {
             this.text = text;
             this.area = area;
@@ -39,7 +42,9 @@ namespace PlatformerGameClient.Views.MenuComponents
             onClick = onClickDelgate;
             y = this.area.Y;
             this.isSelected = isSelected;
-
+            m_selectedFont = selectedFont;
+            baseFont = font;
+            
         }
 
 
@@ -93,9 +98,9 @@ namespace PlatformerGameClient.Views.MenuComponents
             this.font = font;
         }
 
-        public bool isHoveredOver()
+        public override string isHoveredOver()
         {
-            return area.Contains(Mouse.GetState().Position);
+            return area.Contains(Mouse.GetState().Position) ? this.text : "";
         }
 
 
@@ -106,20 +111,25 @@ namespace PlatformerGameClient.Views.MenuComponents
                 Clicked(gameTime);
             }
 
-            else if (Mouse.GetState().LeftButton == ButtonState.Pressed && isHoveredOver())
+            else if (Mouse.GetState().LeftButton == ButtonState.Pressed && isSelected)
+            {
+                Clicked(gameTime);
+            }
+
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed && isSelected)
             {
                 Clicked(gameTime);
             }
 
 
-            setIsSelected(isHoveredOver());
+            /*setIsSelected(isHoveredOver());
 
 
             if (isSelected)
             {
                 Hovered(gameTime);
             }
-            
+            */
             
         }
 
@@ -159,9 +169,16 @@ namespace PlatformerGameClient.Views.MenuComponents
         /// <summary>
         /// We don't need to do anything quite yet.
         /// </summary>
-        public override void selectionChanged()
+        public override void selectionChanged(string selection)
         {
-            
+            if (selection == this.text)
+            {
+                this.font = m_selectedFont;
+            }
+            else
+            {
+                this.font = baseFont;
+            }
         }
     }
 }
