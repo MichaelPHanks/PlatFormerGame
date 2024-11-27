@@ -37,8 +37,13 @@ namespace PlatformerGameClient.Views
         private bool isEnterUp = false;
         KeyboardInput keyboard;
 
+        private MenuItemList m_resolutionItems;
+        private MenuItem hd;
+        private MenuItem poorQuality;
+        private MenuItem okayQuality;
 
-        MenuItemList m_menulist;
+        private bool canUseMouse = false;
+
 
 
         private enum KeySelection
@@ -60,9 +65,38 @@ namespace PlatformerGameClient.Views
             keyboard.registerCommand(Keys.Up, true, new IInputDevice.CommandDelegate(UpHit));
             keyboard.registerCommand(Keys.Down, true, new IInputDevice.CommandDelegate(DownHit));
 
+            float scale = m_graphics.PreferredBackBufferWidth / 1920f;
+            Vector2 stringSize = m_fontMenuSelect.MeasureString("1920X1080") * scale;
+            float bottom = m_graphics.PreferredBackBufferWidth / 4;
+            hd = new MenuItem("1920X1080", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(highDefinition), true, m_fontMenuSelect);
+            bottom += stringSize.Y;
+            stringSize = m_fontMenu.MeasureString("1280X720") * scale;
+            poorQuality = new MenuItem("1280X720", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(highDefinition), false, m_fontMenuSelect);
+ 
+            List <MenuItem> list = new List<MenuItem>();
+            list.Add(hd);
+            list.Add((poorQuality));
 
+            m_resolutionItems = new MenuItemList(list, m_fontMenu, m_fontMenuSelect, "1920X1080");
 
            /* m_menulist = new MenuItemList();*/
+        }
+
+        public void highDefinition(GameTime gameTime)
+        {
+            m_graphics.PreferredBackBufferWidth = 1920;
+            m_graphics.PreferredBackBufferHeight = 1080;
+
+            m_graphics.IsFullScreen = false;
+            m_graphics.ApplyChanges();
+        }
+        public void poorDefinition(GameTime gameTime)
+        {
+            m_graphics.PreferredBackBufferWidth = 1280;
+            m_graphics.PreferredBackBufferHeight = 720;
+
+            m_graphics.IsFullScreen = false;
+            m_graphics.ApplyChanges();
         }
 
         public void UpHit(GameTime gameTime)
@@ -80,7 +114,21 @@ namespace PlatformerGameClient.Views
 
         public override GameStateEnum processInput(GameTime gameTime)
         {
-            keyboard.Update(gameTime);
+            if (canUseMouse)
+            {
+                keyboard.Update(gameTime);
+                m_resolutionItems.processInput(gameTime);
+            }
+
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+            {
+                canUseMouse = true;
+            }
+            else
+            {
+                canUseMouse = false;
+            }
+            
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -96,36 +144,36 @@ namespace PlatformerGameClient.Views
 /*            m_spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, m_graphics.PreferredBackBufferWidth, m_graphics.PreferredBackBufferHeight), Color.Gray);
 */
             float scale1 = m_graphics.PreferredBackBufferWidth / 1920f;
-/*
-            Vector2 stringSize2 = m_fontMenu.MeasureString("Press ESC To Return") * scale1;
+            /*
+                        Vector2 stringSize2 = m_fontMenu.MeasureString("Press ESC To Return") * scale1;
 
-            *//*m_spriteBatch.Draw(whiteBackground, new Rectangle((int)(m_graphics.PreferredBackBufferWidth / 5 - stringSize2.X / 2),
-            (int)(m_graphics.PreferredBackBufferHeight / 10f - stringSize2.Y), (int)stringSize2.X, (int)stringSize2.Y), Color.White);*//*
+                        *//*m_spriteBatch.Draw(whiteBackground, new Rectangle((int)(m_graphics.PreferredBackBufferWidth / 5 - stringSize2.X / 2),
+                        (int)(m_graphics.PreferredBackBufferHeight / 10f - stringSize2.Y), (int)stringSize2.X, (int)stringSize2.Y), Color.White);*//*
 
-            m_spriteBatch.DrawString(
-                           m_fontMenu,
-                           "Press ESC To Return",
-                           new Vector2(m_graphics.PreferredBackBufferWidth / 5 - stringSize2.X / 2,
-            m_graphics.PreferredBackBufferHeight / 10f - stringSize2.Y),
-                           Color.Black,
-                           0,
-                           Vector2.Zero,
-                           scale1,
-                           SpriteEffects.None,
-                           0);*/
+                        m_spriteBatch.DrawString(
+                                       m_fontMenu,
+                                       "Press ESC To Return",
+                                       new Vector2(m_graphics.PreferredBackBufferWidth / 5 - stringSize2.X / 2,
+                        m_graphics.PreferredBackBufferHeight / 10f - stringSize2.Y),
+                                       Color.Black,
+                                       0,
+                                       Vector2.Zero,
+                                       scale1,
+                                       SpriteEffects.None,
+                                       0);*/
             // Display the current Keys and their buttons...
-            float bottom = drawMenuItem(m_fontMenu, "Settings", m_graphics.PreferredBackBufferHeight / 1080f * 100f, Color.Black);
-            bottom = drawMenuItem(m_currentSelection == KeySelection.Up ? m_fontMenuSelect : m_fontMenu, "Up: " + up.ToString(), bottom, m_currentSelection == KeySelection.Up && isKeySelected ? Color.Blue : Color.White);
+            /*  float bottom = drawMenuItem(m_fontMenu, "Settings", m_graphics.PreferredBackBufferHeight / 1080f * 100f, Color.Black);
+              bottom = drawMenuItem(m_currentSelection == KeySelection.Up ? m_fontMenuSelect : m_fontMenu, "Up: " + up.ToString(), bottom, m_currentSelection == KeySelection.Up && isKeySelected ? Color.Blue : Color.White);
 
-            bottom = drawMenuItem(m_currentSelection == KeySelection.Left ? m_fontMenuSelect : m_fontMenu, "Left: " + left.ToString(), bottom, m_currentSelection == KeySelection.Left && isKeySelected ? Color.Blue : Color.White);
-            bottom = drawMenuItem(m_currentSelection == KeySelection.Right ? m_fontMenuSelect : m_fontMenu, "Right: " + right.ToString(), bottom, m_currentSelection == KeySelection.Right && isKeySelected ? Color.Blue : Color.White);
-            bottom = drawMenuItem(m_currentSelection == KeySelection.Down ? m_fontMenuSelect : m_fontMenu, "Down: " + down.ToString(), bottom, m_currentSelection == KeySelection.Down && isKeySelected ? Color.Blue : Color.White);
+              bottom = drawMenuItem(m_currentSelection == KeySelection.Left ? m_fontMenuSelect : m_fontMenu, "Left: " + left.ToString(), bottom, m_currentSelection == KeySelection.Left && isKeySelected ? Color.Blue : Color.White);
+              bottom = drawMenuItem(m_currentSelection == KeySelection.Right ? m_fontMenuSelect : m_fontMenu, "Right: " + right.ToString(), bottom, m_currentSelection == KeySelection.Right && isKeySelected ? Color.Blue : Color.White);
+              bottom = drawMenuItem(m_currentSelection == KeySelection.Down ? m_fontMenuSelect : m_fontMenu, "Down: " + down.ToString(), bottom, m_currentSelection == KeySelection.Down && isKeySelected ? Color.Blue : Color.White);
+  */
+            /*     bottom = drawMenuItem(m_fontMenu, "Press Enter To Select a Key Binding To Change", bottom + stringSize2.Y, Color.LightGray);
+                 bottom = drawMenuItem(m_fontMenu, "Once Blue, Select The Preferred Key For That Control", bottom + stringSize2.Y, Color.LightGray);
+                 bottom = drawMenuItem(m_fontMenu, "Press Escape If You Change Your Mind (If Blue)", bottom + stringSize2.Y, Color.LightGray);*/
 
-       /*     bottom = drawMenuItem(m_fontMenu, "Press Enter To Select a Key Binding To Change", bottom + stringSize2.Y, Color.LightGray);
-            bottom = drawMenuItem(m_fontMenu, "Once Blue, Select The Preferred Key For That Control", bottom + stringSize2.Y, Color.LightGray);
-            bottom = drawMenuItem(m_fontMenu, "Press Escape If You Change Your Mind (If Blue)", bottom + stringSize2.Y, Color.LightGray);*/
-
-
+            m_resolutionItems.draw();
             m_spriteBatch.End();
         }
 

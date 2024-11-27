@@ -102,9 +102,13 @@ namespace PlatformerGameClient.Views.MenuComponents
 
         public override void draw()
         {
+            float bottom = 0;
             foreach (var item in menuItems)
             {
+                if (bottom != 0)
+                { item.setBottom((int)bottom); }
                 item.draw();
+                bottom = item.getStringSize();
             }
         }
 
