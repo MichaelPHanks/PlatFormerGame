@@ -117,7 +117,7 @@ namespace PlatformerGameClient.Views
             keyInput.registerCommand(Keys.Up, true, new IInputDevice.CommandDelegate(UpHit));
             keyInput.registerCommand(Keys.Down, true, new IInputDevice.CommandDelegate(DownHit));
 
-
+/*
             float scale = m_graphics.PreferredBackBufferWidth / 1920f;
             Vector2 stringSize = m_fontMenuSelect.MeasureString("New Game!") * scale;
             float bottom = m_graphics.PreferredBackBufferWidth / 4;
@@ -134,11 +134,13 @@ namespace PlatformerGameClient.Views
             
 
 
-            menuItems = new List<MenuItem> { newGame, exit, settingsItem };
+            menuItems = new List<MenuItem> { nzewGame, exit, settingsItem };
+*/
 
-            m_menuList = new MenuItemList(menuItems, m_fontMenu, m_fontMenuSelect, "New Game!");
+            m_menuList = new MenuItemList(new List<string> {"New Game!", "Exit", "Settings" }, m_fontMenu, m_fontMenuSelect, "New Game!", this.m_graphics, this.m_spriteBatch, new Vector2(0, m_graphics.PreferredBackBufferWidth / 4));
+            float scale = m_graphics.PreferredBackBufferWidth / 1920f;
 
-            stringSize = m_fontMenu.MeasureString("<--") * scale;
+            Vector2 stringSize = m_fontMenu.MeasureString("<--") * scale;
             backButton = new MenuItem("<--", new Rectangle(100, 100, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(backClicked), false, m_fontMenuSelect);
             backButton.registerHover(new MenuItem.OnHover(onHover));
             /*keyInput.registerCommand(Keys.Enter, true, new IInputDevice.CommandDelegate(EnterHit));*/
@@ -150,6 +152,11 @@ namespace PlatformerGameClient.Views
             ControllerInput.registerCommand(Buttons.DPadDown, true, new IInputDevice.CommandDelegate(DownHit));
             ControllerInput.registerCommand(Buttons.LeftThumbstickUp, true, new IInputDevice.CommandDelegate(UpHit));
             ControllerInput.registerCommand(Buttons.LeftThumbstickDown, true, new IInputDevice.CommandDelegate(DownHit));
+
+
+
+            m_menuList.registerOnClick("Exit", new MenuItem.OnClick(exitOnClick));
+            
 
         }
 

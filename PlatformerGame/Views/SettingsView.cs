@@ -77,7 +77,7 @@ namespace PlatformerGameClient.Views
             list.Add(hd);
             list.Add((poorQuality));
 
-            m_resolutionItems = new MenuItemList(list, m_fontMenu, m_fontMenuSelect, "1920X1080");
+           /* m_resolutionItems = new MenuItemList(list, m_fontMenu, m_fontMenuSelect, "1920X1080");*/
 
            /* m_menulist = new MenuItemList();*/
         }

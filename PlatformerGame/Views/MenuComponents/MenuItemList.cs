@@ -14,15 +14,45 @@ namespace PlatformerGameClient.Views.MenuComponents
         private List<MenuItem> menuItems;
         private string selectedItem;
         private int selectedItemIndex;
+        private Vector2 topLeftPosition;
+        private GraphicsDeviceManager graphicsDeviceManager;
+        private SpriteBatch spriteBatch;
 
-        public MenuItemList(List<MenuItem> menuItems, SpriteFont defaultFont, SpriteFont hoveredFont, string selectedItem) 
+        public MenuItemList(List<string> items, SpriteFont defaultFont, SpriteFont hoveredFont, string selectedItem, GraphicsDeviceManager graphics, SpriteBatch spriteBatch, Vector2 topLeftPosition) 
         {
 
             this.defaultFont = defaultFont;
             this.hoveredFont = hoveredFont;
-            this.menuItems = menuItems;
+            this.menuItems = new List<MenuItem>();
             this.selectedItem = selectedItem;
             this.selectedItemIndex = 0;
+            this.graphicsDeviceManager = graphics;
+            this.spriteBatch = spriteBatch;
+            this.topLeftPosition = topLeftPosition;
+            this.createMenuItems(items);
+
+        }
+
+        /// <summary>
+        /// Factory-ish pattern to create the menu items, purely just based on a list of strings, each string being what 
+        /// an item should be displayed as.
+        /// </summary>
+        /// <param name="menuStrings"></param>
+        private void createMenuItems(List<string> menuStrings)
+        {
+            this.menuItems.Clear();
+            float bottom = this.topLeftPosition.Y;
+            // Iterate through each of the menuStrings and create a menuItem, add it to the menuItems list.
+            foreach (string menuString in menuStrings)
+            {
+
+                float scale = graphicsDeviceManager.PreferredBackBufferWidth / 1920f;
+                Vector2 stringSize = menuString == selectedItem ? this.hoveredFont.MeasureString(menuString) * scale : this.defaultFont.MeasureString(menuString) * scale;
+                
+                MenuItem tempMenuItem = new MenuItem(menuString, new Rectangle((int)graphicsDeviceManager.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), this.graphicsDeviceManager, menuString == selectedItem ? this.hoveredFont : this.defaultFont, this.spriteBatch, null, menuString == selectedItem, this.hoveredFont);
+                this.menuItems.Add(tempMenuItem);
+                bottom += stringSize.Y;
+            }
         }
 
 
@@ -120,6 +150,20 @@ namespace PlatformerGameClient.Views.MenuComponents
         {
             this.setSelectedItem(selection, 0);
             
+        }
+
+
+        public void registerOnClick(string item, MenuItem.OnClick onClick)
+        {
+            foreach (MenuItem menuItem in menuItems)
+            {
+                if (menuItem.text == item)
+                {
+                    menuItem.registerOnClick(onClick);
+                    break;
+                }
+
+            }
         }
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj": {}
+    "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj": {
+    "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj",
+        "projectUniqueName": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj",
         "projectName": "PlatformerGameServer",
-        "projectPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj",
+        "projectPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGame\\PlatFormerGameServer\\PlatformerGameServer.csproj",
         "packagesPath": "C:\\Users\\mhank\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGameServer\\obj\\",
+        "outputPath": "C:\\Users\\mhank\\source\\repos\\PlatformerGame\\PlatFormerGame\\PlatFormerGameServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

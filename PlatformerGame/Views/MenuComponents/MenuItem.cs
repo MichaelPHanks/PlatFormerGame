@@ -180,5 +180,11 @@ namespace PlatformerGameClient.Views.MenuComponents
                 this.font = baseFont;
             }
         }
+
+
+        public void registerOnClick(OnClick onclick)
+        {
+            this.onClick = onclick;
+        }
     }
 }

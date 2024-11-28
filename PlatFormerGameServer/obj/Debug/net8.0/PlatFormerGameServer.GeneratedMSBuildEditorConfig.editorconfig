@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PlatformerGameServer
-build_property.ProjectDir = C:\Users\mhank\source\repos\PlatformerGame\PlatFormerGameServer\
+build_property.ProjectDir = C:\Users\mhank\source\repos\PlatformerGame\PlatFormerGame\PlatFormerGameServer\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
