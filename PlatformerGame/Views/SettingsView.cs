@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace PlatformerGameClient.Views
 {
@@ -41,10 +42,15 @@ namespace PlatformerGameClient.Views
         private MenuItem hd;
         private MenuItem poorQuality;
         private MenuItem okayQuality;
+        private Dictionary<MenuState, string> m_gameStates;
+        private MenuItem backButton;
+        private bool backButtonClicked = false;
 
         private bool canUseMouse = false;
 
+        private List<MenuObject> m_menuObjects;
 
+        private string currentSelection = "1920X1080";
 
         private enum KeySelection
         {
@@ -54,7 +60,13 @@ namespace PlatformerGameClient.Views
             Down,
             None,
         }
-        private KeySelection m_currentSelection = KeySelection.Up;
+
+        private enum MenuState
+        {   Back,
+            HighDefinition,
+            PoorDefinition
+        }
+        private MenuState m_currentSelection = MenuState.HighDefinition;
         public override void loadContent(ContentManager contentManager)
         {
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
@@ -64,8 +76,13 @@ namespace PlatformerGameClient.Views
 
             keyboard.registerCommand(Keys.Up, true, new IInputDevice.CommandDelegate(UpHit));
             keyboard.registerCommand(Keys.Down, true, new IInputDevice.CommandDelegate(DownHit));
-
-            float scale = m_graphics.PreferredBackBufferWidth / 1920f;
+            m_gameStates = new Dictionary<MenuState, string>
+            {
+                {MenuState.HighDefinition, "1920X1080" },
+                {MenuState.PoorDefinition, "1280X720" },
+                { MenuState.Back, "<--"}
+            };
+            /*float scale = m_graphics.PreferredBackBufferWidth / 1920f;
             Vector2 stringSize = m_fontMenuSelect.MeasureString("1920X1080") * scale;
             float bottom = m_graphics.PreferredBackBufferWidth / 4;
             hd = new MenuItem("1920X1080", new Rectangle((int)m_graphics.PreferredBackBufferWidth / 2 - (int)stringSize.X / 2, (int)bottom, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenuSelect, m_spriteBatch, new MenuItem.OnClick(highDefinition), true, m_fontMenuSelect);
@@ -75,11 +92,16 @@ namespace PlatformerGameClient.Views
  
             List <MenuItem> list = new List<MenuItem>();
             list.Add(hd);
-            list.Add((poorQuality));
+            list.Add((poorQuality));*/
+            float scale = m_graphics.PreferredBackBufferWidth / 1920f;
 
-           /* m_resolutionItems = new MenuItemList(list, m_fontMenu, m_fontMenuSelect, "1920X1080");*/
-
-           /* m_menulist = new MenuItemList();*/
+            Vector2 stringSize = m_fontMenu.MeasureString("<--") * scale;
+            backButton = new MenuItem("<--", new Rectangle(100, 100, (int)stringSize.X, (int)stringSize.Y), m_graphics, m_fontMenu, m_spriteBatch, new MenuItem.OnClick(backClicked), false, m_fontMenuSelect);
+            m_resolutionItems = new MenuItemList(new List<string> { "1920X1080", "1280X720" }, m_fontMenu, m_fontMenuSelect, "1920X1080", this.m_graphics, this.m_spriteBatch, new Vector2(0, m_graphics.PreferredBackBufferWidth / 4));
+            m_menuObjects = new List<MenuObject> {backButton, m_resolutionItems };
+            m_resolutionItems.registerOnClick("1920X1080", new MenuItem.OnClick(highDefinition));
+            m_resolutionItems.registerOnClick("1280X720", new MenuItem.OnClick(poorDefinition));
+            /* m_menulist = new MenuItemList();*/
         }
 
         public void highDefinition(GameTime gameTime)
@@ -98,43 +120,128 @@ namespace PlatformerGameClient.Views
             m_graphics.IsFullScreen = false;
             m_graphics.ApplyChanges();
         }
-
+        public void backClicked(GameTime gameTime)
+        {
+            backButtonClicked = true;
+            Console.WriteLine("Something amazing happened...");
+        }
         public void UpHit(GameTime gameTime)
         {
             Console.WriteLine("Did something");
-            m_currentSelection -= 1;
+            if (m_currentSelection > 0)
+            {
+                this.m_currentSelection -= 1;
+            }
+            else
+            {
+                this.m_currentSelection = MenuState.HighDefinition;
+            }
+
+            foreach (MenuObject item in m_menuObjects)
+            {
+                item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+                currentSelection = this.m_gameStates[this.m_currentSelection];
+
+            }
 
         }
         public void DownHit(GameTime gameTime)
         {
             Console.WriteLine("Did something cooler");
-            m_currentSelection += 1;
+            if ((int)m_currentSelection < 1)
+            {
+                this.m_currentSelection += 1;
+            }
+            else
+            {
+                this.m_currentSelection = MenuState.PoorDefinition;
+            }
+
+            foreach (MenuObject item in m_menuObjects)
+            {
+                item.selectionChanged(this.m_gameStates[this.m_currentSelection]);
+                currentSelection = this.m_gameStates[this.m_currentSelection];
+            }
+
 
         }
 
         public override GameStateEnum processInput(GameTime gameTime)
         {
-            if (canUseMouse)
+            
+            keyboard.Update(gameTime);
+            m_resolutionItems.processInput(gameTime);
+
+
+
+
+
+            if (isEnterUp && canUseMouse)
             {
-                keyboard.Update(gameTime);
-                m_resolutionItems.processInput(gameTime);
+
+
+                string itemSelected = currentSelection;
+                foreach (MenuObject item in m_menuObjects)
+                {
+
+                    string idk = item.isHoveredOver();
+                    if (item.isHoveredOver() != "")
+                    {
+                        itemSelected = item.isHoveredOver();
+                        break;
+                    }
+
+                }
+
+                if (itemSelected != currentSelection)
+                {
+                    if (itemSelected == "<--")
+                    {
+                        Console.WriteLine("IDK");
+                    }
+                    foreach (MenuObject item in m_menuObjects)
+                    {
+                        item.selectionChanged(itemSelected);
+                    }
+                    currentSelection = itemSelected;
+                    foreach (KeyValuePair<MenuState, string> tempitem in m_gameStates)
+                    {
+                        if (tempitem.Value == currentSelection)
+                        {
+                            m_currentSelection = tempitem.Key;
+                        }
+                    }
+                }
+
+                foreach (MenuObject menuObject in m_menuObjects)
+                {
+                    menuObject.processInput(gameTime);
+                }
+
+
+
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+            {
+                isEnterUp = true;
             }
 
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                canUseMouse = false;
+            }
             if (Mouse.GetState().LeftButton == ButtonState.Released)
             {
                 canUseMouse = true;
             }
-            else
-            {
-                canUseMouse = false;
-            }
-            
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (backButtonClicked)
             {
+                backButtonClicked = false;
                 return GameStateEnum.MainMenu;
-
             }
+
             return GameStateEnum.Settings;
         }
 
@@ -172,8 +279,11 @@ namespace PlatformerGameClient.Views
             /*     bottom = drawMenuItem(m_fontMenu, "Press Enter To Select a Key Binding To Change", bottom + stringSize2.Y, Color.LightGray);
                  bottom = drawMenuItem(m_fontMenu, "Once Blue, Select The Preferred Key For That Control", bottom + stringSize2.Y, Color.LightGray);
                  bottom = drawMenuItem(m_fontMenu, "Press Escape If You Change Your Mind (If Blue)", bottom + stringSize2.Y, Color.LightGray);*/
-
-            m_resolutionItems.draw();
+            foreach (MenuObject menuObject in m_menuObjects)
+            {
+                menuObject.draw();
+            }
+            /*m_resolutionItems.draw();*/
             m_spriteBatch.End();
         }
 

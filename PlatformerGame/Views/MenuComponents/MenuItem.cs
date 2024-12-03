@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PlatformerGameClient.Rendering;
+using System;
 
 namespace PlatformerGameClient.Views.MenuComponents
 {
@@ -106,8 +107,13 @@ namespace PlatformerGameClient.Views.MenuComponents
 
         public override void processInput(GameTime gameTime)
         {
+            if (text == "<--" && isSelected)
+            {
+                Console.WriteLine("IDK");
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && isSelected)
             {
+
                 Clicked(gameTime);
             }
 
@@ -174,10 +180,13 @@ namespace PlatformerGameClient.Views.MenuComponents
             if (selection == this.text)
             {
                 this.font = m_selectedFont;
+                this.isSelected = true;
             }
             else
             {
                 this.font = baseFont;
+                this.isSelected = false;
+
             }
         }
 

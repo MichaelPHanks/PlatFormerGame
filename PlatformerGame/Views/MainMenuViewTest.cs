@@ -156,6 +156,7 @@ namespace PlatformerGameClient.Views
 
 
             m_menuList.registerOnClick("Exit", new MenuItem.OnClick(exitOnClick));
+            m_menuList.registerOnClick("Settings", new MenuItem.OnClick(settingsClicked));
             
 
         }
